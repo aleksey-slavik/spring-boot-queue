@@ -1,0 +1,10 @@
+version: '2.2'
+services:
+  spring-boot-queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      VERSION: dev
+    ports:
+      - "8080:8080"
