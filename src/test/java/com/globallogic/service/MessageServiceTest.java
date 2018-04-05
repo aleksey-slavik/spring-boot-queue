@@ -12,17 +12,56 @@ import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Message service test
+ *
+ * @author oleksii.slavik
+ */
 public class MessageServiceTest {
 
+    /**
+     * SQS access key
+     */
     private static final String SQS_ACCESS_KEY = "";
+
+    /**
+     * SQS secret key
+     */
     private static final String SQS_SECRET_KEY = "";
+
+    /**
+     * SQS queue name
+     */
     private static final String QUEUE_NAME = "spring-boot-queue";
+
+    /**
+     * SQS port number
+     */
     private static final int SQS_PORT = 9324;
+
+    /**
+     * SQS host name
+     */
     private static final String SQS_HOST = "localhost";
+
+    /**
+     * Message text
+     */
     private static final String TEST_MESSAGE = "test message";
 
+    /**
+     * ElasticMQ rest server object
+     */
     private SQSRestServer sqsRestServer;
-    private SendMessageService messageService;
+
+    /**
+     * Message service
+     */
+    private MessageService messageService;
+
+    /**
+     * Messaging template
+     */
     private QueueMessagingTemplate messagingTemplate;
 
     @Before
@@ -39,7 +78,7 @@ public class MessageServiceTest {
         messagingTemplate = new QueueMessagingTemplate(client);
         messagingTemplate.setDefaultDestinationName(QUEUE_NAME);
 
-        messageService = new SendMessageService(messagingTemplate);
+        messageService = new MessageService(messagingTemplate);
     }
 
     @After
@@ -49,6 +88,9 @@ public class MessageServiceTest {
         }
     }
 
+    /**
+     * Check send message
+     */
     @Test
     public void sendMessageTest() throws Exception {
         Message message = new Message();
