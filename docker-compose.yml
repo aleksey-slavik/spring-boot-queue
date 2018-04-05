@@ -1,0 +1,10 @@
+version: '2.2'
+services:
+  config-api:
+    container_name: spring-boot-queue-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: spring-boot-queue-api:latest
+    ports:
+      - "8080:8080"
