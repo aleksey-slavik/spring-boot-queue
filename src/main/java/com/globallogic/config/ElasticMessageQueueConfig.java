@@ -8,6 +8,7 @@ import com.amazonaws.services.sqs.buffered.AmazonSQSBufferedAsyncClient;
 import com.amazonaws.services.sqs.buffered.QueueBufferConfig;
 import org.elasticmq.rest.sqs.SQSRestServer;
 import org.elasticmq.rest.sqs.SQSRestServerBuilder;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.util.UriComponents;
@@ -35,7 +36,7 @@ public class ElasticMessageQueueConfig {
     private static final int QUEUE_MAX_INFLIGHT_OUTBOUND_BATCHES = 5;
 
     @Bean
-    public UriComponents elasticMQLocalSQSUri() {
+    public UriComponents elasticMQUri() {
         return UriComponentsBuilder.newInstance()
                 .scheme(QUEUE_SCHEME)
                 .host(QUEUE_HOST)
@@ -69,5 +70,12 @@ public class ElasticMessageQueueConfig {
                 .withMaxInflightOutboundBatches(QUEUE_MAX_INFLIGHT_OUTBOUND_BATCHES);
 
         return new AmazonSQSBufferedAsyncClient(client, config);
+    }
+
+    @Bean
+    public QueueMessagingTemplate messagingTemplate(AmazonSQSAsync sqs) {
+        QueueMessagingTemplate template = new QueueMessagingTemplate(sqs);
+        template.setDefaultDestinationName(QUEUE_NAME);
+        return template;
     }
 }
