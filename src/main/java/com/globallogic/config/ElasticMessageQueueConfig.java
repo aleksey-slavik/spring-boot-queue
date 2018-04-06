@@ -11,6 +11,8 @@ import org.elasticmq.rest.sqs.SQSRestServerBuilder;
 import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -113,6 +115,8 @@ public class ElasticMessageQueueConfig {
      * @param uri         queue uri
      * @return SQS client
      */
+    @Lazy
+    @DependsOn("sqsRestServer")
     @Bean
     public AmazonSQSAsync amazonSQS(AWSCredentials credentials, UriComponents uri) {
         AmazonSQSAsyncClient client = new AmazonSQSAsyncClient(credentials);

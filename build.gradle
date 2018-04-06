@@ -13,12 +13,16 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 
-group = 'com.globallogic'
+group = 'globallogic'
 version = '0.0.1'
 sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
+}
+
+configurations {
+	providedRuntime
 }
 
 dependencies {
@@ -28,4 +32,21 @@ dependencies {
 	compile group: 'javax.jms', name: 'javax.jms-api', version: '2.0.1'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.elasticmq:elasticmq-rest-sqs_2.11:0.10.1')
+}
+
+jar {
+	baseName = 'spring-boot-queue'
+	version = '0.0.1'
+
+	manifest {
+		attributes "Main-Class": "com.globallogic.SpringBootQueueApplication"
+	}
+
+	from {
+		configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+}
+
+springBoot {
+	executable = true
 }
