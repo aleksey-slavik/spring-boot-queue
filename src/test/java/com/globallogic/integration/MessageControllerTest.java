@@ -1,4 +1,4 @@
-package com.globallogic.rest;
+package com.globallogic.integration;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class MessageControllerIntegrationTest {
+public class MessageControllerTest {
 
     @LocalServerPort
     private int port;

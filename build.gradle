@@ -21,7 +21,6 @@ repositories {
 	mavenCentral()
 }
 
-
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.elasticmq:elasticmq-rest-sqs_2.11:0.10.1')

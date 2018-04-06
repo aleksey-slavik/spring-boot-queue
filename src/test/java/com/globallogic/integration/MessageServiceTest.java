@@ -1,8 +1,9 @@
-package com.globallogic.service;
+package com.globallogic.integration;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClient;
 import com.globallogic.domain.Message;
+import com.globallogic.service.MessageService;
 import org.elasticmq.rest.sqs.SQSRestServer;
 import org.elasticmq.rest.sqs.SQSRestServerBuilder;
 import org.junit.After;
