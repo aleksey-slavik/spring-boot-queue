@@ -1,5 +1,6 @@
-package com.globallogic.rest;
+package com.globallogic.integration;
 
+import com.globallogic.domain.Message;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +17,9 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ApiControllerIntegrationTest {
+public class MessageControllerTest {
+
+    private static final String TEST_MESSAGE = "test message";
 
     @LocalServerPort
     private int port;
@@ -28,12 +31,14 @@ public class ApiControllerIntegrationTest {
 
     @Before
     public void init() throws Exception {
-        this.url = new URL("http://localhost:" + port + "/");
+        this.url = new URL("http://localhost:" + port + "/send");
     }
 
     @Test
     public void indexTest() throws Exception {
-        ResponseEntity<String> response = template.getForEntity(url.toString(), String.class);
-        assertEquals("Hello world!", response.getBody());
+        Message message = new Message();
+        message.setMessage(TEST_MESSAGE);
+        ResponseEntity<String> response = template.postForEntity(url.toString(), message, String.class);
+        assertEquals(204, response.getStatusCodeValue());
     }
 }

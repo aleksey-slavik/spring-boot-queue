@@ -1,8 +1,12 @@
 # spring-boot-queue
 
-Links:
-1 Successful Git Branching Model:
-http://nvie.com/posts/a-successful-git-branching-model/
+Required environment:
+- Docker
 
-2 Spring Boot Docker Example
-https://spring.io/guides/gs/spring-boot-docker/
+To run this application, you will need the following:
+- run Docker
+- execute command "docker-compose -f docker-compose.yml up --build"
+
+Application description:
+
+- service for sending messages to queue

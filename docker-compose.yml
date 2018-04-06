@@ -5,6 +5,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: spring-boot-queue-api:latest
     ports:
       - "8080:8080"
+    depends_on:
+      config-elasticmq:
+        condition: service_started
+  config-elasticmq:
+        image: s12v/elasticmq
+        ports:
+          - "9324:9324"
