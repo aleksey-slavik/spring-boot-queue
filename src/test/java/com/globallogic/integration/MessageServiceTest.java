@@ -48,11 +48,6 @@ public class MessageServiceTest {
     private static final String TEST_MESSAGE = "test message";
 
     /**
-     * ElasticMQ rest server object
-     */
-    //private SQSRestServer sqsRestServer;
-
-    /**
      * Message service
      */
     private MessageService messageService;
@@ -64,27 +59,13 @@ public class MessageServiceTest {
 
     @Before
     public void before() {
-        /*sqsRestServer = SQSRestServerBuilder
-                .withPort(SQS_PORT)
-                .withInterface(SQS_HOST)
-                .start();*/
-
         AmazonSQSAsyncClient client = new AmazonSQSAsyncClient(new BasicAWSCredentials(SQS_ACCESS_KEY, SQS_SECRET_KEY));
         client.setEndpoint("http://" + SQS_HOST + ":" + SQS_PORT);
         client.createQueue(QUEUE_NAME);
-
         messagingTemplate = new QueueMessagingTemplate(client);
         messagingTemplate.setDefaultDestinationName(QUEUE_NAME);
-
         messageService = new MessageService(messagingTemplate);
     }
-
-    /*@After
-    public void after() {
-        if (sqsRestServer != null) {
-            sqsRestServer.stopAndWait();
-        }
-    }*/
 
     /**
      * Check send message
