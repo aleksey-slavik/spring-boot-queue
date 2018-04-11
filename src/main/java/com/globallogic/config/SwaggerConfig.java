@@ -22,9 +22,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
     /**
-     *
-     *
-     * @return
+     * Configure swagger
      */
     @Bean
     public Docket api() {
@@ -37,6 +35,9 @@ public class SwaggerConfig {
                 .build();
     }
 
+    /**
+     * Configure swagger-ui resources
+     */
     @Bean
     public WebMvcConfigurerAdapter adapter() {
         return new WebMvcConfigurerAdapter() {
@@ -54,6 +55,11 @@ public class SwaggerConfig {
         };
     }
 
+    /**
+     * Generate information about api
+     *
+     * @return api information
+     */
     private ApiInfo apiInfo () {
         return new ApiInfoBuilder()
                 .title("Spring Boot Queue")
