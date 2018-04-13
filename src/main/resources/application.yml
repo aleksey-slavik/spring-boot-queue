@@ -1,0 +1,11 @@
+queue:
+  accessKey: xxxx
+  secretKey: xxxx
+  scheme: http
+  host: localhost
+  port: 9324
+  name: test-queue
+  maxBatchOpen: 200
+  maxBatchSize: 10
+  maxInflightOutboundBatches: 5
+

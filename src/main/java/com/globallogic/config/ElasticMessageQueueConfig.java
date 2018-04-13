@@ -8,11 +8,9 @@ import com.amazonaws.services.sqs.buffered.AmazonSQSBufferedAsyncClient;
 import com.amazonaws.services.sqs.buffered.QueueBufferConfig;
 import org.elasticmq.rest.sqs.SQSRestServer;
 import org.elasticmq.rest.sqs.SQSRestServerBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -27,47 +25,56 @@ public class ElasticMessageQueueConfig {
     /**
      * SQS access key
      */
-    private static final String ACCESS_KEY = "";
+    @Value("${queue.accessKey}")
+    private String accessKey;
 
     /**
      * SQS secret key
      */
-    private static final String SECRET_KEY = "";
+    @Value("${queue.secretKey}")
+    private String secretKey;
 
     /**
      * SQS scheme type
      */
-    private static final String QUEUE_SCHEME = "http";
+    @Value("${queue.scheme}")
+    private String queueScheme;
 
     /**
      * SQS host name
      */
-    private static final String QUEUE_HOST = "localhost";
+    @Value("${queue.host}")
+    private String queueHost;
 
     /**
      * SQS queue name
      */
-    private static final String QUEUE_NAME = "spring-boot-queue";
+    @Value("${queue.name}")
+    private String queueName;
 
     /**
      * SQS port number
      */
-    private static final int QUEUE_PORT = 9324;
+    @Value("${queue.port}")
+    private int queuePort;
 
     /**
      * Maximum amount of time (in milliseconds), that an outgoing call waits for other calls of the same type to bath with
      */
-    private static final long QUEUE_MAX_BATCH_OPEN = 200;
+    @Value("${queue.maxBatchOpen}")
+    private long queueMaxBatchOpen;
 
     /**
      * Maximum number of messages, that will be batched together in a single batch request
      */
-    private static final int QUEUE_MAX_BATCH_SIZE = 10;
+    @Value("${queue.maxBatchSize}")
+    private int queueMaxBatchSize;
 
     /**
      * Maximum number of active receive batches, that can be process at the same time
      */
-    private static final int QUEUE_MAX_INFLIGHT_OUTBOUND_BATCHES = 5;
+    @Value("${queue.maxInflightOutboundBatches}")
+    private int queueMaxInflightOutboundBatches;
 
     /**
      * ElasticMQ uri builder
@@ -77,9 +84,9 @@ public class ElasticMessageQueueConfig {
     @Bean
     public UriComponents elasticMQUri() {
         return UriComponentsBuilder.newInstance()
-                .scheme(QUEUE_SCHEME)
-                .host(QUEUE_HOST)
-                .port(QUEUE_PORT)
+                .scheme(queueScheme)
+                .host(queueHost)
+                .port(queuePort)
                 .build()
                 .encode();
     }
@@ -105,7 +112,7 @@ public class ElasticMessageQueueConfig {
      */
     @Bean
     public AWSCredentials awsCredentials() {
-        return new BasicAWSCredentials(ACCESS_KEY, SECRET_KEY);
+        return new BasicAWSCredentials(accessKey, secretKey);
     }
 
     /**
@@ -121,12 +128,12 @@ public class ElasticMessageQueueConfig {
     public AmazonSQSAsync amazonSQS(AWSCredentials credentials, UriComponents uri) {
         AmazonSQSAsyncClient client = new AmazonSQSAsyncClient(credentials);
         client.setEndpoint(uri.toUriString());
-        client.createQueue(QUEUE_NAME);
+        client.createQueue(queueName);
 
         QueueBufferConfig config = new QueueBufferConfig()
-                .withMaxBatchOpenMs(QUEUE_MAX_BATCH_OPEN)
-                .withMaxBatchSize(QUEUE_MAX_BATCH_SIZE)
-                .withMaxInflightOutboundBatches(QUEUE_MAX_INFLIGHT_OUTBOUND_BATCHES);
+                .withMaxBatchOpenMs(queueMaxBatchOpen)
+                .withMaxBatchSize(queueMaxBatchSize)
+                .withMaxInflightOutboundBatches(queueMaxInflightOutboundBatches);
 
         return new AmazonSQSBufferedAsyncClient(client, config);
     }
@@ -140,7 +147,7 @@ public class ElasticMessageQueueConfig {
     @Bean
     public QueueMessagingTemplate messagingTemplate(AmazonSQSAsync sqs) {
         QueueMessagingTemplate template = new QueueMessagingTemplate(sqs);
-        template.setDefaultDestinationName(QUEUE_NAME);
+        template.setDefaultDestinationName(queueName);
         return template;
     }
 }

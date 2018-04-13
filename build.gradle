@@ -27,6 +27,9 @@ configurations {
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework:spring-jms')
+	compile('com.amazonaws:aws-java-sdk:1.10.55')
+	compile('com.amazonaws:amazon-sqs-java-messaging-lib:1.0.0')
 	compile('org.elasticmq:elasticmq-rest-sqs_2.11:0.10.1')
 	compile('io.springfox:springfox-swagger2:2.7.0')
 	compile('io.springfox:springfox-swagger-ui:2.7.0')
