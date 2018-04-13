@@ -1,7 +1,6 @@
 package com.globallogic.listener;
 
 import com.globallogic.domain.Message;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.aws.messaging.config.annotation.EnableSqs;
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.stereotype.Component;

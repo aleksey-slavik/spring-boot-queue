@@ -1,13 +1,9 @@
-package com.globallogic.integration;
+package com.globallogic.unit;
 
 import com.globallogic.domain.Message;
-import com.globallogic.service.MessageService;
+import com.globallogic.listener.MessageListener;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -19,12 +15,10 @@ import static org.junit.Assert.assertEquals;
  *
  * @author oleksii.slavik
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class MessageListenerTest {
 
     /**
-     * test message text
+     * Message text
      */
     private static final String TEST_MESSAGE = "test message";
 
@@ -32,17 +26,6 @@ public class MessageListenerTest {
      * expected response
      */
     private static final String EXPECTED_RESPONSE = "message in queue: " + TEST_MESSAGE + "\n";
-
-    /**
-     * message delay in milliseconds
-     */
-    private static final int MESSAGE_DELAY = 100;
-
-    /**
-     * message service
-     */
-    @Autowired
-    private MessageService service;
 
     /**
      * output stream
@@ -60,10 +43,10 @@ public class MessageListenerTest {
      */
     @Test
     public void receiveMessageTest() throws Exception {
+        MessageListener listener = new MessageListener();
         Message message = new Message();
         message.setMessage(TEST_MESSAGE);
-        service.sendMessage(message);
-        Thread.sleep(MESSAGE_DELAY);
+        listener.receive(message);
         assertEquals(EXPECTED_RESPONSE, out.toString());
     }
 }
