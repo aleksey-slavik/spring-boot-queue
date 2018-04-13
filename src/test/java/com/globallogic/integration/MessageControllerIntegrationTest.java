@@ -31,7 +31,7 @@ public class MessageControllerIntegrationTest {
 
     @Before
     public void init() throws Exception {
-        this.url = new URL("http://localhost:" + port + "/send");
+        this.url = new URL("http://localhost:" + port + "/api/send");
     }
 
     @Test
