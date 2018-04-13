@@ -1,13 +1,20 @@
 buildscript {
 	repositories {
 		mavenCentral()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.10.RELEASE")
-		classpath('se.transmode.gradle:gradle-docker:1.2')
+		classpath("se.transmode.gradle:gradle-docker:1.2")
+		classpath("org.liquibase:liquibase-core:3.5.3")
+		classpath("gradle.plugin.org.liquibase:liquibase-gradle-plugin:1.2.4")
+		classpath("org.postgresql:postgresql:42.1.4")
 	}
 }
 
+apply plugin: 'org.liquibase.gradle'
 apply plugin: 'application'
 apply plugin: 'docker'
 apply plugin: 'java'
@@ -16,6 +23,19 @@ apply plugin: 'org.springframework.boot'
 group = 'globallogic'
 version = '0.0.1'
 sourceCompatibility = 1.8
+
+def changeLog = "$projectDir/src/main/resources/changelog.sql"
+
+liquibase {
+	activities {
+		main {
+			changeLogFile changeLog
+			url 'jdbc:postgresql://localhost:5432/message'
+			username 'root'
+			password 'root'
+		}
+	}
+}
 
 repositories {
 	mavenCentral()
