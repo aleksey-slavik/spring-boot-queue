@@ -41,7 +41,7 @@ public class MessageControllerTest {
         message.setMessage(TEST_MESSAGE);
         Mockito.doNothing().when(service).sendMessage(message);
 
-        mvc.perform(post("/send")
+        mvc.perform(post("/api/send")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .content(new ObjectMapper().writeValueAsBytes(message)))
                 .andExpect(status().isNoContent());
