@@ -14,42 +14,38 @@ buildscript {
 	}
 }
 
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
 apply plugin: 'org.liquibase.gradle'
 apply plugin: 'application'
 apply plugin: 'docker'
-apply plugin: 'java'
-apply plugin: 'org.springframework.boot'
 
 group = 'globallogic'
 version = '0.0.1'
-sourceCompatibility = 1.8
-
-def changeLog = "$projectDir/src/main/resources/changelog.sql"
-
-liquibase {
-	activities {
-		main {
-			changeLogFile changeLog
-			url 'jdbc:postgresql://localhost:5432/message'
-			username 'root'
-			password 'root'
-		}
-	}
-}
 
 repositories {
 	mavenCentral()
+	maven {
+		url "https://plugins.gradle.org/m2/"
+	}
 }
 
 configurations {
-	providedRuntime
+	liquibase
+	postgres
 }
 
 dependencies {
+	compile 'org.postgresql:postgresql:42.1.4'
+	compile 'org.liquibase:liquibase-core:3.5.3'
+
+	compile 'org.postgresql:postgresql:42.1.4'
+
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.elasticmq:elasticmq-rest-sqs_2.11:0.10.1')
 	compile group: 'org.springframework.cloud', name: 'spring-cloud-aws-messaging', version: '1.1.3.RELEASE'
 	compile group: 'javax.jms', name: 'javax.jms-api', version: '2.0.1'
+
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.elasticmq:elasticmq-rest-sqs_2.11:0.10.1')
 }
@@ -73,4 +69,18 @@ springBoot {
 
 task buildDocker(type: Docker, dependsOn: build) {
 	dockerfile = file('Dockerfile')
+}
+
+task liquibaseUpdate(type: JavaExec) {
+	group = "Liquibase"
+	classpath configurations.compile
+	main = "liquibase.integration.commandline.Main"
+	args "--changeLogFile=$projectDir/src/main/resources/changelog.sql"
+	args "--username=root"
+	args "--password=root"
+	args "--url=jdbc:postgresql://localhost:5432/storage"
+	args "--driver=org.postgresql.Driver"
+	args "--logLevel=debug"
+	args "--defaultSchemaName=public"
+	args "update"
 }
