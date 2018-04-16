@@ -11,6 +11,17 @@ services:
       config-elasticmq:
         condition: service_started
   config-elasticmq:
-        image: s12v/elasticmq
-        ports:
-          - "9324:9324"
+    container_name: elasticmq
+    image: s12v/elasticmq
+    ports:
+      - "9324:9324"
+  config-postgres:
+    container_name: postgres
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=storage
