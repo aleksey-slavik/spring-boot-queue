@@ -9,3 +9,12 @@ queue:
   maxBatchSize: 10
   maxInflightOutboundBatches: 5
 
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/storage"
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+liquibase:
+  change-log: classpath:changelog.sql

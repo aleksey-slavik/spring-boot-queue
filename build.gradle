@@ -1,22 +1,15 @@
 buildscript {
 	repositories {
 		mavenCentral()
-		maven {
-			url "https://plugins.gradle.org/m2/"
-		}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.10.RELEASE")
 		classpath("se.transmode.gradle:gradle-docker:1.2")
-		classpath("org.liquibase:liquibase-core:3.5.3")
-		classpath("gradle.plugin.org.liquibase:liquibase-gradle-plugin:1.2.4")
-		classpath("org.postgresql:postgresql:42.1.4")
 	}
 }
 
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
-apply plugin: 'org.liquibase.gradle'
 apply plugin: 'application'
 apply plugin: 'docker'
 
@@ -25,22 +18,12 @@ version = '0.0.1'
 
 repositories {
 	mavenCentral()
-	maven {
-		url "https://plugins.gradle.org/m2/"
-	}
-}
-
-configurations {
-	liquibase
-	postgres
 }
 
 dependencies {
-	compile 'org.postgresql:postgresql:42.1.4'
-	compile 'org.liquibase:liquibase-core:3.5.3'
-
-	compile 'org.postgresql:postgresql:42.1.4'
-
+	compile('org.postgresql:postgresql:42.2.2')
+	compile('org.liquibase:liquibase-core:3.5.3')
+	runtime('org.postgresql:postgresql:42.2.2')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework:spring-jms')
 	compile('com.amazonaws:aws-java-sdk:1.10.55')
@@ -72,12 +55,12 @@ springBoot {
 	executable = true
 }
 
-task buildDocker(type: Docker, dependsOn: build) {
-	dockerfile = file('Dockerfile')
+task createImage(type: Exec) {
+	commandLine 'docker', 'build', '-t', 'sbqueue', '-f', 'Dockerfile', './'
 }
 
 task liquibaseUpdate(type: JavaExec) {
-	group = "Liquibase"
+	group = "liquibase"
 	classpath configurations.compile
 	main = "liquibase.integration.commandline.Main"
 	args "--changeLogFile=$projectDir/src/main/resources/changelog.sql"
@@ -85,7 +68,6 @@ task liquibaseUpdate(type: JavaExec) {
 	args "--password=root"
 	args "--url=jdbc:postgresql://localhost:5432/storage"
 	args "--driver=org.postgresql.Driver"
-	args "--logLevel=debug"
-	args "--defaultSchemaName=public"
+	args "--logLevel=info"
 	args "update"
 }

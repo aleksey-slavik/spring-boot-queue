@@ -1,13 +1,15 @@
 version: '2.2'
 services:
   config-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    container_name: sbqueue
+    image: sbqueue
     ports:
       - "8080:8080"
     depends_on:
       config-elasticmq:
+        condition: service_started
+    depends_on:
+      config-postgres:
         condition: service_started
   config-elasticmq:
     container_name: elasticmq
@@ -17,7 +19,6 @@ services:
   config-postgres:
     container_name: postgres
     image: postgres
-    restart: always
     ports:
       - "5432:5432"
     environment:
