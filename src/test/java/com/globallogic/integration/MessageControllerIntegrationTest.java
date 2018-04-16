@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class MessageControllerTest {
+public class MessageControllerIntegrationTest {
 
     private static final String TEST_MESSAGE = "test message";
 
@@ -31,11 +31,11 @@ public class MessageControllerTest {
 
     @Before
     public void init() throws Exception {
-        this.url = new URL("http://localhost:" + port + "/send");
+        this.url = new URL("http://localhost:" + port + "/api/send");
     }
 
     @Test
-    public void indexTest() throws Exception {
+    public void sendMessageTest() throws Exception {
         Message message = new Message();
         message.setMessage(TEST_MESSAGE);
         ResponseEntity<String> response = template.postForEntity(url.toString(), message, String.class);
