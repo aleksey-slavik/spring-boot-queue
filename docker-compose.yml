@@ -1,27 +1,33 @@
 version: '2.2'
 services:
-  config-api:
+  app:
     container_name: sbqueue
-    image: sbqueue
+    build: .
     ports:
       - "8080:8080"
     depends_on:
-      config-elasticmq:
+      elasticmq:
         condition: service_started
-    depends_on:
-      config-postgres:
-        condition: service_started
-  config-elasticmq:
+      postgres:
+        condition: service_healthy
+
+  elasticmq:
     container_name: elasticmq
     image: s12v/elasticmq
     ports:
       - "9324:9324"
-  config-postgres:
+
+  postgres:
     container_name: postgres
     image: postgres
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=storage
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "root"
+      POSTGRES_DB: "storage"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d storage"]
+      interval: 10s
+      timeout: 10s
+      retries: 1

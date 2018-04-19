@@ -21,10 +21,13 @@ repositories {
 }
 
 dependencies {
+	runtime('org.postgresql:postgresql:42.2.2')
+	runtime('org.liquibase:liquibase-core:3.5.3')
+
 	compile('org.postgresql:postgresql:42.2.2')
 	compile('org.liquibase:liquibase-core:3.5.3')
-	runtime('org.postgresql:postgresql:42.2.2')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-starter-jdbc')
 	compile('org.springframework:spring-jms')
 	compile('com.amazonaws:aws-java-sdk:1.10.55')
 	compile('com.amazonaws:amazon-sqs-java-messaging-lib:1.0.0')
